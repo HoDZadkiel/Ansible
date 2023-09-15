@@ -1,0 +1,17 @@
+- hosts: all
+  become: True
+  tasks:
+    - name: 下載並執行MariaDB倉庫設定腳本
+      command: bash -c "curl -sS https://dlm.mariadb.com/3/MariaDB/mariadb_repo_setup | sudo bash"
+
+    - name: 更新apt並安裝MariaDB-server
+      apt:
+        update_cache: yes
+        name: mariadb-server
+        state: latest
+
+    - name: 確保MariaDB服務已啟動並設定為開機自動啟動
+      systemd:
+        name: mariadb
+        state: started
+        enabled: yes
