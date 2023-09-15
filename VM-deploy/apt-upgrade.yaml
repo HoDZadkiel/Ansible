@@ -1,7 +1,7 @@
-- hosts: All
+- hosts: ubuntu
   become: true
   tasks:
     - name: 自動更新所有packages
       apt:
-      upgrade: yes
-      update_cache: yes
+        upgrade: yes
+        update_cache: yes
