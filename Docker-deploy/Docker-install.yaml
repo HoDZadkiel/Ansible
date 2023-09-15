@@ -1,0 +1,38 @@
+---
+- hosts: ubuntu
+  become: yes
+  tasks:
+    - name: 更新apt並安裝必要的軟體包
+      apt:
+        update_cache: yes
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+        state: latest
+
+    - name: 獲取Ubuntu版本
+      command: lsb_release -cs
+      register: ubuntu_version
+
+    - name: 添加Docker的GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: 添加Docker倉庫
+      apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ubuntu_version.stdout }} stable"
+        state: present
+
+    - name: 更新apt並安裝docker-ce, docker-ce-cli, containerd.io, docker-buildx-plugin, docker-compose-plugin
+      apt:
+        update_cache: yes
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: latest
+...
