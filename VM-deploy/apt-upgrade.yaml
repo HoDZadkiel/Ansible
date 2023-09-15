@@ -1,5 +1,5 @@
 - hosts: all
-  become: True
+  become: true
   tasks:
     - name: 自動更新所有packages
       apt:
