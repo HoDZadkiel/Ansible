@@ -1,6 +1,7 @@
-- name: Update and upgrade apt packages
+- hosts: All
   become: true
-  apt:
-    upgrade: yes
-    update_cache: yes
-    cache_valid_time: 86400 #One day
+  tasks:
+    - name: 自動更新所有packages
+      apt:
+      upgrade: yes
+      update_cache: yes
