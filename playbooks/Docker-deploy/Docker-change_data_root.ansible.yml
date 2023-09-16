@@ -3,34 +3,46 @@
   hosts: all
   become: True
   tasks:
+    - name: Check if Docker is installed
+      command: docker --version
+      register: docker_check
+      ignore_errors: yes
+
     - name: Stop Docker service
       systemd:
         name: docker
         state: stopped
+      when: docker_check.rc == 0
 
     - name: Create new Docker configuration file
       copy:
         dest: /etc/docker/daemon.json
         content: |
           {
-            "data-root": "/path/to/your/new/docker/root"
+            "data-root": "/home/ubuntu/vdb/docker-root"
           }
+      when: docker_check.rc == 0
 
     - name: Copy Docker data to new location
-      command: rsync -aP /var/lib/docker/ "/path/to/your/new/docker/root"
+      command: rsync -aP /var/lib/docker/ "/home/ubuntu/vdb/docker-root"
+      when: docker_check.rc == 0
 
     - name: Rename old Docker data directory
       command: mv /var/lib/docker /var/lib/docker.old
+      when: docker_check.rc == 0
 
     - name: Start Docker service
       systemd:
         name: docker
         state: started
+      when: docker_check.rc == 0
 
     - name: Check Docker info
       command: docker info
       register: result
+      when: docker_check.rc == 0
 
     - debug:
         var: result.stdout_lines
+      when: docker_check.rc == 0
 ...
