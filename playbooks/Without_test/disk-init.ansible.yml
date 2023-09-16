@@ -1,6 +1,6 @@
 ---
 - hosts: all
-  become: yes
+  become: True
   tasks:
     - name: Unmount the disk, if it's mounted
       ansible.builtin.mount:
