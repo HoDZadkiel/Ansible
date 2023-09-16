@@ -1,6 +1,6 @@
 ---
 - name: Update Docker data directory
-  hosts: localhost
+  hosts: all
   become: True
   tasks:
     - name: Stop Docker service
