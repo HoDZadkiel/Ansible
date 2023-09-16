@@ -1,0 +1,36 @@
+---
+- name: Update Docker data directory
+  hosts: localhost
+  become: True
+  tasks:
+    - name: Stop Docker service
+      systemd:
+        name: docker
+        state: stopped
+
+    - name: Create new Docker configuration file
+      copy:
+        dest: /etc/docker/daemon.json
+        content: |
+          {
+            "data-root": "/path/to/your/new/docker/root"
+          }
+
+    - name: Copy Docker data to new location
+      command: rsync -aP /var/lib/docker/ "/path/to/your/new/docker/root"
+
+    - name: Rename old Docker data directory
+      command: mv /var/lib/docker /var/lib/docker.old
+
+    - name: Start Docker service
+      systemd:
+        name: docker
+        state: started
+
+    - name: Check Docker info
+      command: docker info
+      register: result
+
+    - debug:
+        var: result.stdout_lines
+...
