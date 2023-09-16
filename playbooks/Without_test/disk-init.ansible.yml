@@ -1,5 +1,5 @@
 ---
-- hosts: your_host
+- hosts: all
   become: yes
   tasks:
     - name: Unmount the disk, if it's mounted
