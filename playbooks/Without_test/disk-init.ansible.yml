@@ -1,0 +1,40 @@
+---
+- hosts: your_host
+  become: yes
+  tasks:
+    - name: Unmount the disk, if it's mounted
+      ansible.builtin.mount:
+        path: /home/ubuntu/vdb
+        state: unmounted
+
+    - name: Erase everything on the disk
+      ansible.builtin.command:
+        cmd: dd if=/dev/zero of=/dev/vdb bs=512 count=1 conv=notrunc
+
+    - name: Create a new partition
+      ansible.builtin.parted:
+        device: /dev/vdb
+        number: 1
+        state: present
+
+    - name: Create ext4 filesystem on vdb1
+      ansible.builtin.filesystem:
+        dev: /dev/vdb1
+        fstype: ext4
+
+    - name: Ensure directory exists for mount point
+      ansible.builtin.file:
+        path: /home/ubuntu/vdb
+        state: directory
+
+    - name: Mount vdb1 to /home/ubuntu/vdb
+      ansible.builtin.mount:
+        path: /home/ubuntu/vdb
+        src: /dev/vdb1
+        fstype: ext4
+        state: mounted
+
+    - name: Ensure vdb1 is mounted at boot
+      ansible.builtin.lineinfile:
+        path: /etc/fstab
+        line: '/dev/vdb1 /home/ubuntu/vdb ext4 defaults 0 0'
