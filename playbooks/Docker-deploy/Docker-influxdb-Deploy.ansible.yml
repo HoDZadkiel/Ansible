@@ -1,0 +1,21 @@
+---
+- hosts: all
+  become: True
+  tasks:
+    - name: Create a Docker volume for InfluxDB
+      docker_volume:
+        name: influxdb_data
+        state: present
+
+    - name: Install InfluxDB using Docker
+      docker_container:
+        name: influxdb
+        image: influxdb
+        state: started
+        restart_policy: always
+        env:
+          TZ: Asia/Taipei
+        ports:
+          - "8086:8086"
+        volumes:
+          - influxdb_data:/var/lib/influxdb

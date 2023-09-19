@@ -1,0 +1,21 @@
+---
+- hosts: all
+  become: True
+  tasks:
+    - name: Create a Docker volume for phpMyAdmin
+      docker_volume:
+        name: phpmyadmin_config
+        state: present
+
+    - name: Install phpMyAdmin using Docker
+      docker_container:
+        name: phpmyadmin
+        image: linuxserver/phpmyadmin
+        state: started
+        restart_policy: always
+        env:
+          TZ: Asia/Taipei
+        ports:
+          - "8080:80"
+        volumes:
+          - phpmyadmin_config:/config

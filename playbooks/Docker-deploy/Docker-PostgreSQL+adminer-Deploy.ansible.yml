@@ -1,0 +1,31 @@
+---
+- hosts: all
+  become: True
+  tasks:
+    - name: Create a Docker volume for PostgreSQL
+      docker_volume:
+        name: postgresql_data
+        state: present
+
+    - name: Install PostgreSQL using Docker
+      docker_container:
+        name: postgresql
+        image: postgres
+        state: started
+        restart_policy: always
+        env:
+          POSTGRES_PASSWORD: testtest
+          TZ: Asia/Taipei
+        volumes:
+          - postgresql_data:/var/lib/postgresql/data
+        ports:
+          - "5432:5432"
+
+    - name: Install Adminer using Docker
+      docker_container:
+        name: adminer
+        image: adminer
+        state: started
+        restart_policy: always
+        ports:
+          - "8080:8080"

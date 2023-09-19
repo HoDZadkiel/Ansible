@@ -1,0 +1,12 @@
+---
+- hosts: servers
+  become: True
+  tasks:
+    - name: Install Adminer using Docker
+      docker_container:
+        name: adminer
+        image: adminer
+        state: started
+        restart_policy: always
+        ports:
+          - "8080:8080"

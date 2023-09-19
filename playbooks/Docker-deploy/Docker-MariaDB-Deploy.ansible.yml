@@ -1,0 +1,22 @@
+---
+- hosts: all
+  become: True
+  tasks:
+    - name: Create a Docker volume for MariaDB
+      docker_volume:
+        name: mariadb_config
+        state: present
+
+    - name: Install MariaDB using Docker
+      docker_container:
+        name: mariadb
+        image: linuxserver/mariadb
+        state: started
+        restart_policy: always
+        env:
+          MYSQL_ROOT_PASSWORD: testtest
+          TZ: Asia/Taipei
+        ports:
+          - "3306:3306"
+        volumes:
+          - mariadb_config:/config

@@ -1,0 +1,23 @@
+---
+- hosts: servers
+  become: True
+  tasks:
+    - name: Create a Docker volume for MongoDB
+      docker_volume:
+        name: mongodb_data
+        state: present
+
+    - name: Install MongoDB using Docker
+      docker_container:
+        name: mongodb
+        image: mongo
+        state: started
+        restart_policy: always
+        env:
+          MONGO_INITDB_ROOT_USERNAME: admin
+          MONGO_INITDB_ROOT_PASSWORD: testtest
+          TZ: Asia/Taipei
+        volumes:
+          - mongodb_data:/data/db
+        ports:
+          - "27017:27017"
