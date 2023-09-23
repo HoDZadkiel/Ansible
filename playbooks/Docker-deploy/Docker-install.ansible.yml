@@ -1,5 +1,5 @@
 - hosts: all
-  become: yes
+  become: True
   tasks:
     - name: 更新apt並安裝必要的軟體包
       apt:
