@@ -1,0 +1,29 @@
+# 這是一個 Ansible inventory 檔案的範例。
+# 取代括弧中的主機名稱 (e.g., your_docker_host_ip) 為你實際的主機 IP 或網域名稱。
+# 你可以將此檔案複製為 'inventory' 或其他名稱，並依需求修改。
+
+[docker_hosts]
+# 用於安裝 Docker 或部署 Docker 容器的主機
+# your_docker_host_ip ansible_user=your_ssh_user ansible_ssh_private_key=~/.ssh/your_private_key
+docker_server_1 ansible_host=192.168.1.101
+docker_server_2 ansible_host=your_docker_host_domain_name
+
+[mariadb_servers]
+# 部署 MariaDB 容器的主機
+# 此主機也應該在 docker_hosts 群組中 (如果 MariaDB 是透過 Docker 部署)
+# your_mariadb_host_ip ansible_user=your_ssh_user
+db_server_1 ansible_host=192.168.1.102
+
+[all_vms]
+# 用於一般虛擬機管理任務，例如更新
+# your_vm_ip_1
+# your_vm_ip_2
+vm_alpha ansible_host=192.168.1.201
+vm_beta ansible_host=192.168.1.202
+
+# 群組變數範例:
+# [docker_hosts:vars]
+# some_variable=value_for_all_docker_hosts
+
+# 主機特定變數範例:
+# docker_server_1 specific_variable=othervalue
